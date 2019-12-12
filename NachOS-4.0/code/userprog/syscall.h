@@ -37,6 +37,10 @@
 
 #define SC_Add 42
 
+#define SC_PrintInt 51
+#define SC_PrintChar 52
+#define SC_PrintString 53
+
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -48,6 +52,11 @@
  * are then invoked in the Nachos kernel, after appropriate error checking, 
  * from the system call entry point in exception.cc.
  */
+
+// Additional system calls
+void PrintInt(int val);
+void PrintChar(char ch);
+void PrintString(char *ch);
 
 /* Stop Nachos, and print out performance stats */
 void Halt();
@@ -103,8 +112,8 @@ typedef int OpenFileId;
  * the console device.
  */
 
-#define ConsoleInput 0
-#define ConsoleOutput 1
+#define SysCallConsoleInput 0
+#define SysCallConsoleOutput 1
 
 /* Create a Nachos file, with name "name" */
 /* Note: Create does not open the file.   */
