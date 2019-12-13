@@ -48,6 +48,8 @@ private:
 
   void InitRegisters(); // Initialize user-level CPU registers,
                         // before jumping to user code
+
+  static int numUsedPages;
 };
 
 #endif // ADDRSPACE_H

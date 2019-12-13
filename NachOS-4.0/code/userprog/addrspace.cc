@@ -64,16 +64,7 @@ SwapHeader(NoffHeader *noffH)
 
 AddrSpace::AddrSpace()
 {
-    pageTable = new TranslationEntry[NumPhysPages];
-    for (int i = 0; i < NumPhysPages; i++)
-    {
-        pageTable[i].virtualPage = i; // for now, virt page # = phys page #
-        pageTable[i].physicalPage = i;
-        pageTable[i].valid = TRUE;
-        pageTable[i].use = FALSE;
-        pageTable[i].dirty = FALSE;
-        pageTable[i].readOnly = FALSE;
-    }
+    pageTable = nullptr;
 
     // zero out the entire address space
     bzero(kernel->machine->mainMemory, MemorySize);
@@ -131,12 +122,24 @@ bool AddrSpace::Load(char *fileName)
     numPages = divRoundUp(size, PageSize);
     size = numPages * PageSize;
 
-    ASSERT(numPages <= NumPhysPages); // check we're not trying
+    ASSERT(numPages + numUsedPages <= NumPhysPages); // check we're not trying
                                       // to run anything too big --
                                       // at least until we have
                                       // virtual memory
 
     DEBUG(dbgAddr, "Initializing address space: " << numPages << ", " << size);
+
+    pageTable = new TranslationEntry[numPages];
+    for (int i = 0; i < numPages; i++)
+    {
+        pageTable[i].virtualPage = i; // for now, virt page # = phys page #
+        pageTable[i].physicalPage = i + numUsedPages;
+        pageTable[i].valid = TRUE;
+        pageTable[i].use = FALSE;
+        pageTable[i].dirty = FALSE;
+        pageTable[i].readOnly = FALSE;
+    }
+
 
     // then, copy in the code and data segments into memory
     // Note: this code assumes that virtual address = physical address
@@ -309,3 +312,5 @@ AddrSpace::Translate(unsigned int vaddr, unsigned int *paddr, int isReadWrite)
 
     return NoException;
 }
+
+int AddrSpace::numUsedPages = 0;
