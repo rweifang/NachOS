@@ -59,6 +59,15 @@ void ExceptionHandler(ExceptionType which)
 	case SyscallException:
 		switch (type)
 		{
+		case SC_Exit:
+			DEBUG(dbgSys, "System Call: Exit().\n");
+
+			SysExitHandler();
+
+			return;
+			ASSERTNOTREACHED();
+			break;
+
 		case SC_PrintInt:
 			DEBUG(dbgSys, "System Call: PrintInt().\n");
 

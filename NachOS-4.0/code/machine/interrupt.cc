@@ -266,6 +266,10 @@ void Interrupt::Halt()
 //----------------------------------------------------------------------
 void Interrupt::Schedule(CallBackObj *toCall, int fromNow, IntType type)
 {
+    // Check interrupt status
+    if(kernel->interrupt->level==IntOff)
+        return;
+
     int when = kernel->stats->totalTicks + fromNow;
     PendingInterrupt *toOccur = new PendingInterrupt(toCall, when, type);
 

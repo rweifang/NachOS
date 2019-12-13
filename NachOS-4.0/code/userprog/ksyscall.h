@@ -18,6 +18,12 @@ void SysHalt()
   kernel->interrupt->Halt();
 }
 
+void SysExitHandler(){
+  int result = kernel->machine->ReadRegister(4);
+  cout<<"Exit with value : "<<result<<endl;
+  kernel->currentThread->Finish();
+}
+
 void SysAddHandler()
 {
   /* Process SysAdd Systemcall*/

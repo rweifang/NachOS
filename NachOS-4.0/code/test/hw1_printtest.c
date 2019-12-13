@@ -19,5 +19,5 @@ int main()
    PrintInt(-123456789);
    PrintChar('\n');
 
-   Halt();
+   Exit(0);
 }
