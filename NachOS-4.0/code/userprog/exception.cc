@@ -60,6 +60,15 @@ void ExceptionHandler(ExceptionType which)
 		switch (type)
 		{
 
+		case SC_ThreadFork:
+			DEBUG(dbgSys, "System Call: ThreadFork().\n");
+
+			SysThreadForkHandler();
+
+			return;
+			ASSERTNOTREACHED();
+			break;
+
 		case SC_Time:
 			DEBUG(dbgSys, "System Call: Time().\n");
 

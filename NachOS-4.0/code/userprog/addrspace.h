@@ -50,6 +50,10 @@ private:
                         // before jumping to user code
 
   static int numUsedPages;
+
+  // Additional member
+public:
+  AddrSpace(const AddrSpace *ptr); // used at ThreadFork() system call handler
 };
 
 #endif // ADDRSPACE_H

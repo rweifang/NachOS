@@ -111,7 +111,7 @@ void Thread::Fork(VoidFunctionPtr func, void *arg)
     Scheduler *scheduler = kernel->scheduler;
     IntStatus oldLevel;
 
-    DEBUG(dbgThread, "Forking thread: " << name << " f(a): " << (int)func << " " << arg);
+    DEBUG(dbgThread, "Forking thread: " << name << " , ThreadID : " << ThreadID << " , f(a): " << (int)func << " " << arg);
 
     StackAllocate(func, arg);
 
@@ -162,7 +162,7 @@ void Thread::CheckOverflow()
 void Thread::Begin()
 {
     ASSERT(this == kernel->currentThread);
-    DEBUG(dbgThread, "Beginning thread: " << name);
+    DEBUG(dbgThread, "Beginning thread: " << name << " , ThreadID : " << ThreadID);
 
     kernel->scheduler->CheckToBeDestroyed();
     kernel->interrupt->Enable();
@@ -188,7 +188,7 @@ void Thread::Finish()
     (void)kernel->interrupt->SetLevel(IntOff);
     ASSERT(this == kernel->currentThread);
 
-    DEBUG(dbgThread, "Finishing thread: " << name);
+    DEBUG(dbgThread, "Finishing thread: " << name << " , ThreadID : " << ThreadID);
 
     Sleep(TRUE); // invokes SWITCH
     // not reached
@@ -446,3 +446,14 @@ void Thread::SelfTest()
 }
 
 int Thread::nextThreadID = 0;
+
+void Thread::SaveUserRegister(int reg, int val)
+{
+    ASSERT(reg < NumTotalRegs)
+    userRegisters[reg] = val;
+}
+int Thread::ReadUserRegister(int reg)
+{
+    ASSERT(reg < NumTotalRegs)
+    return userRegisters[reg];
+}

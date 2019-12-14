@@ -70,6 +70,37 @@ AddrSpace::AddrSpace()
     bzero(kernel->machine->mainMemory, MemorySize);
 }
 
+AddrSpace::AddrSpace(const AddrSpace *ptr)
+{
+    numPages = ptr->numPages;
+
+    ASSERT(numPages + numUsedPages <= NumPhysPages); // check we're not trying
+
+    pageTable = new TranslationEntry[numPages];
+
+    for (int i = 0; i < numPages; i++)
+    {
+        pageTable[i].virtualPage = i; // for now, virt page # = phys page #
+        pageTable[i].physicalPage = i + numUsedPages;
+        pageTable[i].valid = TRUE;
+        pageTable[i].use = FALSE;
+        pageTable[i].dirty = FALSE;
+        pageTable[i].readOnly = FALSE;
+    }
+
+    int memSize = numPages * PageSize;
+    int sourceAddr = ptr->pageTable[0].physicalPage*PageSize;
+    int targetAddr = numUsedPages*PageSize;
+
+    char *mainMemory = kernel->machine->mainMemory;
+    for (int i = 0; i < memSize; ++i)
+    {
+        mainMemory[targetAddr + i] = mainMemory[sourceAddr + i];
+    }
+
+    numUsedPages += numPages;
+}
+
 //----------------------------------------------------------------------
 // AddrSpace::~AddrSpace
 // 	Dealloate an address space.
@@ -123,9 +154,9 @@ bool AddrSpace::Load(char *fileName)
     size = numPages * PageSize;
 
     ASSERT(numPages + numUsedPages <= NumPhysPages); // check we're not trying
-                                      // to run anything too big --
-                                      // at least until we have
-                                      // virtual memory
+                                                     // to run anything too big --
+                                                     // at least until we have
+                                                     // virtual memory
 
     DEBUG(dbgAddr, "Initializing address space: " << numPages << ", " << size);
 
@@ -140,6 +171,7 @@ bool AddrSpace::Load(char *fileName)
         pageTable[i].readOnly = FALSE;
     }
 
+    numUsedPages += numPages;
 
     // then, copy in the code and data segments into memory
     // Note: this code assumes that virtual address = physical address

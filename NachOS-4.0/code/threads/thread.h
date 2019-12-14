@@ -140,6 +140,9 @@ public:
   int ThreadID;
   Thread *parent;
   int parentThreadID;
+
+  void SaveUserRegister(int reg, int val);
+  int ReadUserRegister(int reg);
 };
 
 // external function, dummy routine whose sole job is to call Thread::Print

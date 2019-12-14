@@ -18,6 +18,33 @@ void SysHalt()
   kernel->interrupt->Halt();
 }
 
+void DummyforFork(AddrSpace *ptr)
+{
+  ptr->RestoreState();
+  kernel->machine->Run();
+};
+
+void SysThreadForkHandler()
+{
+  int funcAddr = kernel->machine->ReadRegister(4);
+
+  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+  if (funcAddr != 0)
+    kernel->machine->WriteRegister(NextPCReg, funcAddr);
+
+  AddrSpace *childSpace = new AddrSpace(kernel->currentThread->space);
+
+  Thread *childThread = new Thread("Forked Thread");
+  childThread->space = childSpace;
+
+  childThread->SaveUserState();
+  childThread->SaveUserRegister(2, 0);
+
+  childThread->Fork(DummyforFork, childSpace);
+  kernel->machine->WriteRegister(2, childThread->ThreadID);
+}
 void SysTimeHandler()
 {
   int result = kernel->stats->totalTicks;
