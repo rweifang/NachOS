@@ -17,7 +17,17 @@ void SysHalt()
 {
   kernel->interrupt->Halt();
 }
+void SysJoinHandler(){
+  int waitChild = kernel->machine->ReadRegister(4);
 
+  Thread *currentThread = kernel->currentThread;
+  if(currentThread->childThreadID.IsInList(waitChild))
+    currentThread->Yield();
+  
+  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+}
 void DummyforFork(AddrSpace *ptr)
 {
   ptr->RestoreState();

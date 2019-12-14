@@ -37,7 +37,7 @@ int main()
       PrintString("Parent after fork waiting for child: ");
       PrintInt(x);
       PrintChar('\n');
-      //  Join(x);
+      Join(x);
       PrintString("Parent executed ");
       PrintInt(GetNumInstr());
       PrintString(" instructions.\n");

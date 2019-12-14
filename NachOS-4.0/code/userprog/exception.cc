@@ -59,6 +59,15 @@ void ExceptionHandler(ExceptionType which)
 	case SyscallException:
 		switch (type)
 		{
+			
+		case SC_Join:
+			DEBUG(dbgSys, "System Call: ThreadJoin().\n");
+
+			SysJoinHandler();
+
+			return;
+			ASSERTNOTREACHED();
+			break;
 
 		case SC_ThreadFork:
 			DEBUG(dbgSys, "System Call: ThreadFork().\n");

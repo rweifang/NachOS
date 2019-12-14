@@ -44,6 +44,8 @@
 #include "machine.h"
 #include "addrspace.h"
 
+#include "list.h"
+
 // CPU register state to be saved on context switch.
 // The x86 needs to save only a few registers,
 // SPARC and MIPS needs to save 10 registers,
@@ -140,6 +142,7 @@ public:
   int ThreadID;
   Thread *parent;
   int parentThreadID;
+  List<int> childThreadID;
 
   void SaveUserRegister(int reg, int val);
   int ReadUserRegister(int reg);

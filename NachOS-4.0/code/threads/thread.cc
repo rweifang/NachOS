@@ -35,6 +35,7 @@ const int STACK_FENCEPOST = 0xdedbeef;
 
 Thread::Thread(char *threadName)
 {
+    // childThreadID = new List<int>();
     name = threadName;
     stackTop = NULL;
     stack = NULL;
@@ -59,6 +60,7 @@ Thread::Thread(char *threadName)
     {
         parent = kernel->currentThread;
         parentThreadID = kernel->currentThread->ThreadID;
+        parent->childThreadID.Append(nextThreadID);
     }
     ThreadID = nextThreadID;
     nextThreadID++;
@@ -78,11 +80,20 @@ Thread::Thread(char *threadName)
 
 Thread::~Thread()
 {
-    DEBUG(dbgThread, "Deleting thread: " << name);
+    // childThreadID = delete childThreadID;
+
+    DEBUG(dbgThread, "Deleting thread: " << name << " , ThreadID : " << ThreadID);
 
     ASSERT(this != kernel->currentThread);
     if (stack != NULL)
         DeallocBoundedArray((char *)stack, StackSize * sizeof(int));
+
+    // List<int> *ptr = &parent->childThreadID;
+
+    //     cout<<"numInList : "<<ptr->NumInList()<<endl;
+
+    if (ThreadID != 0)
+        parent->childThreadID.Remove(ThreadID);
 }
 
 //----------------------------------------------------------------------
