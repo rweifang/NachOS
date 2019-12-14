@@ -46,6 +46,22 @@ Thread::Thread(char *threadName)
                                 // of machine registers
     }
     space = NULL;
+
+    if (nextThreadID == ((1 << 31) - 1))
+        UNIMPLEMENTED();
+
+    if (nextThreadID == 0)
+    {
+        parent = nullptr;
+        parentThreadID = -1;
+    }
+    else
+    {
+        parent = kernel->currentThread;
+        parentThreadID = kernel->currentThread->ThreadID;
+    }
+    ThreadID = nextThreadID;
+    nextThreadID++;
 }
 
 //----------------------------------------------------------------------
@@ -428,3 +444,5 @@ void Thread::SelfTest()
     kernel->currentThread->Yield();
     SimpleThread(0);
 }
+
+int Thread::nextThreadID = 0;

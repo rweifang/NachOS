@@ -18,9 +18,32 @@ void SysHalt()
   kernel->interrupt->Halt();
 }
 
-void SysExitHandler(){
+void SysGetThreadIDHandler()
+{
+  int result = kernel->currentThread->ThreadID;
+  DEBUG(dbgSys, "ThreadID : " << result << "\n");
+  kernel->machine->WriteRegister(2, (int)result);
+
+  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+}
+
+void SysGetParentTIDHandler()
+{
+  int result = kernel->currentThread->parentThreadID;
+  DEBUG(dbgSys, "Parent ThreadID : " << result << "\n");
+  kernel->machine->WriteRegister(2, (int)result);
+
+  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+}
+
+void SysExitHandler()
+{
   int result = kernel->machine->ReadRegister(4);
-  cout<<"Exit with value : "<<result<<endl;
+  cout << "Exit with value : " << result << endl;
   kernel->currentThread->Finish();
 }
 
@@ -55,7 +78,7 @@ void SysPrintIntHandler()
   if (!val)
     kernel->synchConsoleOut->PutChar('0');
   int sign = val < 0 ? -1 : 1;
-  val = val<0 ? val*-1:val;
+  val = val < 0 ? val * -1 : val;
   int len = 0;
   while (val)
   {

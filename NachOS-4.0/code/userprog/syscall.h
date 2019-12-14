@@ -41,6 +41,17 @@
 #define SC_PrintChar 52
 #define SC_PrintString 53
 
+#define SC_GetReg 54
+#define SC_GetPhyAddr 55
+#define SC_GetThreadID 56
+#define SC_GetParentTID 57
+
+#define SC_Sleep 58
+#define SC_Time 59
+#define SC_PrintIntHex 60
+
+#define SC_NumInstr 61
+
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -57,6 +68,16 @@
 void PrintInt(int val);
 void PrintChar(char ch);
 void PrintString(char *ch);
+
+int GetReg(int reg);
+int GetPhyAddr(unsigned vaddr);
+int GetThreadID();
+int GetParentTID();
+
+void Sleep(int val);
+int GetTime();
+int GetNumInstr();
+
 
 /* Stop Nachos, and print out performance stats */
 void Halt();

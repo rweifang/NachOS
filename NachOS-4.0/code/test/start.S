@@ -42,6 +42,22 @@ __start:
  * -------------------------------------------------------------
  */
 
+	.globl GetThreadID
+	.ent	GetThreadID
+GetThreadID:
+	addiu $2,$0,SC_GetThreadID
+	syscall
+	j	$31
+	.end GetThreadID
+
+	.globl GetParentTID
+	.ent	GetParentTID
+GetParentTID:
+	addiu $2,$0,SC_GetParentTID
+	syscall
+	j	$31
+	.end GetParentTID
+
 	.globl PrintInt
 	.ent	PrintInt
 PrintInt:

@@ -113,13 +113,19 @@ PROGRAMS = unknownhost
 else
 # change this if you create a new test program!
 PROGRAMS = add halt shell matmult sort segments
-HW1 = hw1_printtest 
+HW1 = hw1_printtest hw1_forkjoin
 endif
 
 all: $(PROGRAMS) $(HW1)
 
 start.o: start.S ../userprog/syscall.h
 	$(CC) $(CFLAGS) $(ASFLAGS) -c start.S
+
+hw1_forkjoin.o: hw1_forkjoin.c
+	$(CC) $(CFLAGS) -c hw1_forkjoin.c
+hw1_forkjoin: hw1_forkjoin.o start.o
+	$(LD) $(LDFLAGS) start.o hw1_forkjoin.o -o hw1_forkjoin.coff
+	$(COFF2NOFF) hw1_forkjoin.coff hw1_forkjoin
 
 hw1_printtest.o: hw1_printtest.c
 	$(CC) $(CFLAGS) -c hw1_printtest.c

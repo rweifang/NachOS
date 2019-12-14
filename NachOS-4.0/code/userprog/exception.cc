@@ -59,6 +59,25 @@ void ExceptionHandler(ExceptionType which)
 	case SyscallException:
 		switch (type)
 		{
+
+		case SC_GetThreadID:
+			DEBUG(dbgSys, "System Call: GetThreadID().\n");
+
+			SysGetThreadIDHandler();
+
+			return;
+			ASSERTNOTREACHED();
+			break;
+
+		case SC_GetParentTID:
+			DEBUG(dbgSys, "System Call: GetParentTID().\n");
+
+			SysGetParentTIDHandler();
+
+			return;
+			ASSERTNOTREACHED();
+			break;
+
 		case SC_Exit:
 			DEBUG(dbgSys, "System Call: Exit().\n");
 
