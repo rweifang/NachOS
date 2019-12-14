@@ -132,6 +132,7 @@ void Machine::OneInstruction(Instruction *instr)
 	// Fetch instruction
 	if (!ReadMem(registers[PCReg], 4, &raw))
 		return; // exception occurred
+	kernel->stats->numRunInstructions++;
 	instr->value = raw;
 	instr->Decode();
 

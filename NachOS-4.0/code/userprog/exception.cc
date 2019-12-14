@@ -60,6 +60,24 @@ void ExceptionHandler(ExceptionType which)
 		switch (type)
 		{
 
+		case SC_Time:
+			DEBUG(dbgSys, "System Call: Time().\n");
+
+			SysTimeHandler();
+
+			return;
+			ASSERTNOTREACHED();
+			break;
+
+		case SC_NumInstr:
+			DEBUG(dbgSys, "System Call: GetNumInstr().\n");
+
+			SysGetNumInstrHandler();
+
+			return;
+			ASSERTNOTREACHED();
+			break;
+
 		case SC_GetThreadID:
 			DEBUG(dbgSys, "System Call: GetThreadID().\n");
 

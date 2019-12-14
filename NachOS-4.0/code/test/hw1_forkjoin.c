@@ -9,6 +9,10 @@ int main()
    PrintChar('\n');
    PrintInt(GetParentTID());
    PrintChar('\n');
+   PrintInt(Time());
+   PrintChar('\n');
+   PrintInt(GetNumInstr());
+   PrintChar('\n');
    // x = ThreadFork(0);
 
    // PrintChar('\n');

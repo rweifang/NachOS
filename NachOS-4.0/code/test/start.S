@@ -42,6 +42,22 @@ __start:
  * -------------------------------------------------------------
  */
 
+	.globl GetNumInstr
+	.ent	GetNumInstr
+GetNumInstr:
+	addiu $2,$0,SC_NumInstr
+	syscall
+	j	$31
+	.end GetNumInstr
+
+	.globl Time
+	.ent	Time
+Time:
+	addiu $2,$0,SC_Time
+	syscall
+	j	$31
+	.end Time
+
 	.globl GetThreadID
 	.ent	GetThreadID
 GetThreadID:

@@ -18,6 +18,27 @@ void SysHalt()
   kernel->interrupt->Halt();
 }
 
+void SysTimeHandler()
+{
+  int result = kernel->stats->totalTicks;
+  DEBUG(dbgSys, "Total Ticks : " << result << "\n");
+  kernel->machine->WriteRegister(2, (int)result);
+
+  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+}
+void SysGetNumInstrHandler()
+{
+  int result = kernel->stats->numRunInstructions;
+  DEBUG(dbgSys, "Total Run Instructions : " << result << "\n");
+  kernel->machine->WriteRegister(2, (int)result);
+
+  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+}
+
 void SysGetThreadIDHandler()
 {
   int result = kernel->currentThread->ThreadID;
